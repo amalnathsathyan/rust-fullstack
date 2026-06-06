@@ -1,8 +1,16 @@
+use error_chain::error_chain;
 use reqwest::Client;
 use std::env;
 
+error_chain!{
+    foreign_links{
+        Io(std::io::Error);
+        HttpRequest(reqwest::Error);
+    }
+}
+
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>>{
+async fn main() -> Result<()>{
     dotenv::dotenv().ok();
     let api_key = env::var("CRYPTORANK_API_KEY")
         .expect("API KEY NOT SET");
